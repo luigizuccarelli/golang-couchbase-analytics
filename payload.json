@@ -1,0 +1,71 @@
+{
+    "creative": {
+        "name": "",
+        "status": ""
+    },
+    "currency": {
+        "code": "EUR",
+        "name": "Euro"
+    },
+    "effort": {
+        "acquisition_method": "",
+        "advantage_campaign_code": "",
+        "advantage_description": "",
+        "advertisement_name": "",
+        "campaign": "",
+        "date": "",
+        "domain": "",
+        "effort_destination": "",
+        "id": "",
+        "journey": "",
+        "promocode": "",
+        "type": "",
+        "what_are_you_promoting": "",
+        "where_is_the_marketing_going": ""
+    },
+    "event": {
+        "timeonpage": 0,
+        "type": "load"
+    },
+    "from": {
+        "pagename": "index",
+        "pagetype": "origin",
+        "url": "mail"
+    },
+    "journey": {
+        "creative_sequence": "",
+        "name": "",
+        "status": ""
+    },
+    "location": {
+        "carrier": "Virgin Mobile",
+        "country": {
+            "capital": "Dublin",
+            "code": "IE",
+            "name": "Ireland"
+        },
+        "ip": "89.100.153.114"
+    },
+    "platform": {
+        "appCodeName": "Mozilla",
+        "appName": "Netscape",
+        "appVersion": "5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36",
+        "language": "en-US",
+        "os": "Linux x86_64",
+        "product": "Gecko",
+        "productSub": "20030107",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36",
+        "vendor": "Google Inc."
+    },
+    "timestamp": 1574068412150,
+    "to": {
+        "pagename": "page-one",
+        "pagetype": "landing",
+        "url": "file:///home/lzuccarelli/Projects/trackmate/nginx-reverse-proxy/www/page-one.html?custom_referrer=mail&trackingid=588a75d7-47e5-42fa-aff6-ea6f3b091ade&utm_affiliate=SBR-01&utm_campaign=WinBig&utm_medium=web&utm_source=origin&pagename=index&pagetype=origin"
+    },
+    "trackingid": "588a75d7-47e5-42fa-aff6-ea6f3b091ade",
+    "utm_affiliate": "SBR-01",
+    "utm_campaign": "WinBig",
+    "utm_medium": "web",
+    "utm_source": "origin"
+}
