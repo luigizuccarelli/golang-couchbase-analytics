@@ -13,14 +13,15 @@
   </style>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
-    
+   
+    var baseIp = "172.16.106.73";
     google.charts.load('current', {'packages':['sankey']});
 
     function getGraphData() {
       console.log("Getting graph data");
 
       var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", "http://127.0.0.1:9001/api/v1/sankeydata" , true);
+      xhttp.open("POST", "http://"+ baseIp + ":9001/api/v1/sankeydata" , true);
       xhttp.send();
       let arr = [];
 

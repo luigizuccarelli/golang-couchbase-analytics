@@ -155,6 +155,7 @@
   <script src="js/funnel-graph.js"></script>
 
   <body>
+  <div style="display: none">vfcWordPress4EverAndEver06*</div>
 
   <!-- !PAGE CONTENT! -->
   <div class="w3-content" style="max-width:1500px">
@@ -224,6 +225,7 @@
     var jsonData = [];
     var checkboxes = [];
     var level = 1;
+    var baseIp = "172.16.106.73";
 
     function buildDropdown(el) {
       var i, j, selElmnt, a, b, c;
@@ -277,8 +279,8 @@
           closeAllSelect(this);
           this.nextSibling.classList.toggle("select-hide");
           this.classList.toggle("select-arrow-active");
-          if (e.toElement.innerHTML.indexOf("Select") === -1) {
-            buildPaths('level'+level,e.toElement.innerHTML,'node');
+          if (e.target.innerHTML.indexOf("Select") === -1) {
+            buildPaths('level'+level,e.target.innerHTML,'node');
           }
         });
       }
@@ -308,7 +310,7 @@
       console.log("Getting dropdown data");
 
       var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://127.0.0.1:9001/api/v1/source/dropdowndata/SBR-01/WinBig" , true);
+      xhttp.open("GET", "http://" + baseIp + ":9001/api/v1/source/dropdowndata/SBR-01/WinBig" , true);
       xhttp.send();
       let arr = [];
 
@@ -343,7 +345,7 @@
       console.log("Getting nodelink data");
 
       var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://127.0.0.1:9001/api/v1/nodelink/SBR-01/WinBig" , true);
+      xhttp.open("GET", "http://" + baseIp + ":9001/api/v1/nodelink/SBR-01/WinBig" , true);
       xhttp.send();
 
       xhttp.onreadystatechange = function() {
@@ -409,7 +411,7 @@
       json = JSON.stringify(jsonData);
       console.log(json);
       var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", "http://127.0.0.1:9001/api/v1/funneldata" , true);
+      xhttp.open("POST", "http://" + baseIp + ":9001/api/v1/funneldata" , true);
       xhttp.send(json);
       let label = [];
       let sublabel = [];

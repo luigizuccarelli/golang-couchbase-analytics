@@ -77,7 +77,6 @@ func FunnelChartHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logger.Trace(fmt.Sprintf("LMZ DEBUG %v %s %s\n", params, source[:len(source)-1], node[:len(node)-1]))
-
 	q := "select `utm_source`,`to`.`pagename` , `to`.`pagetype`, count(*) as count from SBR where `event`.`type` = 'load' and utm_campaign = 'WinBig' and utm_source in [ " + source[:len(source)-1] + " ] and `to`.`pagename` in [ " + node[:len(node)-1] + " ] group by `utm_source`,`to`.`pagename` , `to`.`pagetype`"
 	logger.Trace(fmt.Sprintf("LMZ DEBUG %s\n", q))
 	query := gocb.NewAnalyticsQuery(q)
