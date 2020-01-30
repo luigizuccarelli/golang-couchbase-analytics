@@ -1,15 +1,18 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	"gopkg.in/couchbase/gocb.v1"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+
+	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/connectors"
+	gocb "github.com/couchbase/gocb/v2"
+	"github.com/gorilla/mux"
+	"github.com/microlib/simple"
 )
 
 const (
@@ -17,15 +20,14 @@ const (
 	APPLICATIONJSON string = "application/json"
 )
 
-func SankeyChartHandler(w http.ResponseWriter, r *http.Request) {
+func SankeyChartHandler(w http.ResponseWriter, r *http.Request, logger *simple.Logger, conn connectors.Clients) {
 	var response Response
 
 	addHeaders(w, r)
 
 	q := "select `from`.`pagename` as source,`to`.`pagename` as destination, count(`trackingid`) as count  from SBR where `event`.`type` = 'load'  group by `from`.`pagename` as source, `to`.`pagename` as destination"
-	query := gocb.NewAnalyticsQuery(q)
 
-	results, err := cluster.ExecuteAnalyticsQuery(query, nil)
+	results, err := conn.AnalyticsQuery(q, nil)
 	if err != nil {
 		response = Response{Name: os.Getenv("NAME"), StatusCode: "500", Status: "ERROR", Message: fmt.Sprintf("Could not execute analytics query from couchbase %v", err)}
 		w.WriteHeader(http.StatusInternalServerError)
@@ -47,7 +49,7 @@ func SankeyChartHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(b))
 }
 
-func FunnelChartHandler(w http.ResponseWriter, r *http.Request) {
+func FunnelChartHandler(w http.ResponseWriter, r *http.Request, logger *simple.Logger, conn connectors.Clients) {
 	var response Response
 	var params []FunnelInputData
 
@@ -78,10 +80,8 @@ func FunnelChartHandler(w http.ResponseWriter, r *http.Request) {
 
 	logger.Trace(fmt.Sprintf("LMZ DEBUG %v %s %s\n", params, source[:len(source)-1], node[:len(node)-1]))
 	q := "select `utm_source`,`to`.`pagename` , `to`.`pagetype`, count(*) as count from SBR where `event`.`type` = 'load' and utm_campaign = 'WinBig' and utm_source in [ " + source[:len(source)-1] + " ] and `to`.`pagename` in [ " + node[:len(node)-1] + " ] group by `utm_source`,`to`.`pagename` , `to`.`pagetype`"
-	logger.Trace(fmt.Sprintf("LMZ DEBUG %s\n", q))
-	query := gocb.NewAnalyticsQuery(q)
 
-	results, err := cluster.ExecuteAnalyticsQuery(query, nil)
+	results, err := conn.AnalyticsQuery(q, nil)
 	if err != nil {
 		response = Response{Name: os.Getenv("NAME"), StatusCode: "500", Status: "ERROR", Message: fmt.Sprintf("Could not execute analytics query from couchbase %v", err)}
 		w.WriteHeader(http.StatusInternalServerError)
@@ -103,7 +103,7 @@ func FunnelChartHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(b))
 }
 
-func SourceDropdownHandler(w http.ResponseWriter, r *http.Request) {
+func SourceDropdownHandler(w http.ResponseWriter, r *http.Request, logger *simple.Logger, conn connectors.Clients) {
 	var response Response
 	vars := mux.Vars(r)
 
@@ -112,9 +112,8 @@ func SourceDropdownHandler(w http.ResponseWriter, r *http.Request) {
 	addHeaders(w, r)
 
 	q := "select distinct `utm_affiliate`,`utm_campaign`,`utm_source`,`utm_content` from SBR where `utm_affiliate` = '" + vars["affiliate"] + "' order by utm_source asc, utm_content asc"
-	query := gocb.NewAnalyticsQuery(q)
 
-	results, err := cluster.ExecuteAnalyticsQuery(query, nil)
+	results, err := conn.AnalyticsQuery(q, nil)
 	if err != nil {
 		response = Response{Name: os.Getenv("NAME"), StatusCode: "500", Status: "ERROR", Message: fmt.Sprintf("Could not execute query from couchbase (sourcedropdown) %v", err)}
 		w.WriteHeader(http.StatusInternalServerError)
@@ -137,7 +136,7 @@ func SourceDropdownHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(b))
 }
 
-func DestinationDropdownHandler(w http.ResponseWriter, r *http.Request) {
+func DestinationDropdownHandler(w http.ResponseWriter, r *http.Request, logger *simple.Logger, conn connectors.Clients) {
 	var response Response
 	vars := mux.Vars(r)
 
@@ -146,9 +145,8 @@ func DestinationDropdownHandler(w http.ResponseWriter, r *http.Request) {
 	addHeaders(w, r)
 	// TODO the from SBR must change - for each affiliate the name will be specific
 	q := "select distinct `from`.`pagename` as source ,`to`.`pagename` as destination from SBR where `utm_campaign` = '" + vars["campaign"] + "' group by `from`.`pagename` as source, `to`.`pagename` as destination"
-	query := gocb.NewAnalyticsQuery(q)
 
-	results, err := cluster.ExecuteAnalyticsQuery(query, nil)
+	results, err := conn.AnalyticsQuery(q, nil)
 	if err != nil {
 		response = Response{Name: os.Getenv("NAME"), StatusCode: "500", Status: "ERROR", Message: fmt.Sprintf("Could not execute query from couchbase (destinationdropdown) %v", err)}
 		w.WriteHeader(http.StatusInternalServerError)
@@ -171,7 +169,7 @@ func DestinationDropdownHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, string(b))
 }
 
-func NodelinkHandler(w http.ResponseWriter, r *http.Request) {
+func NodelinkHandler(w http.ResponseWriter, r *http.Request, logger *simple.Logger, conn connectors.Clients) {
 	var response Response
 	vars := mux.Vars(r)
 
@@ -180,9 +178,8 @@ func NodelinkHandler(w http.ResponseWriter, r *http.Request) {
 	addHeaders(w, r)
 	// TODO the from SBR must change - for each affiliate the name will be specific
 	q := "select distinct  `from`.`pagename` as source ,`to`.`pagename` as destination from SBR where `utm_affiliate` = '" + vars["affiliate"] + "' and `utm_campaign` = '" + vars["campaign"] + "' group by `from`.`pagename` as source, `to`.`pagename` as destination"
-	query := gocb.NewAnalyticsQuery(q)
 
-	results, err := cluster.ExecuteAnalyticsQuery(query, nil)
+	results, err := conn.AnalyticsQuery(q, nil)
 	if err != nil {
 		response = Response{Name: os.Getenv("NAME"), StatusCode: "500", Status: "ERROR", Message: fmt.Sprintf("Could not execute query from couchbase (nodelink) %v", err)}
 		w.WriteHeader(http.StatusInternalServerError)
@@ -211,36 +208,25 @@ func IsAlive(w http.ResponseWriter, r *http.Request) {
 
 // headers (with cors) utility
 func addHeaders(w http.ResponseWriter, r *http.Request) {
-	var request []string
-	for name, headers := range r.Header {
-		name = strings.ToLower(name)
-		for _, h := range headers {
-			request = append(request, fmt.Sprintf("%v: %v", name, h))
-		}
-	}
-
-	logger.Trace(fmt.Sprintf("Headers : %s", request))
-
 	w.Header().Set(CONTENTTYPE, APPLICATIONJSON)
 	// use this for cors
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-
 }
 
 func processSankeyResults(results gocb.AnalyticsResults) ([]SankeyData, error) {
 	var row map[string]interface{}
 	var data []SankeyData
 
-	for results.Next(&row) {
+	for conn.Next(&row) {
 		if count, ok := row["count"]; ok {
 			x, _ := strconv.Atoi(fmt.Sprintf("%v", count))
 			d := SankeyData{Value: x, From: fmt.Sprintf("%v", row["source"]), To: fmt.Sprintf("%v", row["destination"])}
 			data = append(data, d)
 		}
 	}
-	if err := results.Close(); err != nil {
+	if err := conn.Close(); err != nil {
 		return nil, err
 	}
 
