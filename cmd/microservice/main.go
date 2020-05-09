@@ -13,42 +13,23 @@ import (
 	"github.com/microlib/simple"
 )
 
-var (
-	logger *simple.Logger
-)
-
-func startHttpServer(logger *simple.Logger, con connectors.Clients) *http.Server {
+func startHttpServer(con connectors.Clients) *http.Server {
 	srv := &http.Server{Addr: ":" + os.Getenv("SERVER_PORT")}
 	r := mux.NewRouter()
 
 	r.HandleFunc("/api/v1/sankeydata", func(w http.ResponseWriter, req *http.Request) {
-		handlers.SankeyChartHandler(w, req, logger, con)
+		handlers.SankeyChartHandler(w, req, con)
 	}).Methods("POST")
 
-	r.HandleFunc("/api/v1/funneldata", func(w http.ResponseWriter, req *http.Request) {
-		handlers.FunnelChartHandler(w, req, logger, con)
-	}).Methods("POST")
+	r.HandleFunc("/api/v2/sys/info/isalive", handlers.IsAlive).Methods("GET")
 
-	r.HandleFunc("/api/v1/source/dropdowndata/{affiliate}/{campaign}", func(w http.ResponseWriter, req *http.Request) {
-		SourceDropdownHandler(w, req, logger, con)
-	}).Methods("GET")
-
-	r.HandleFunc("/api/v1/destination/dropdowndata/{affiliate}/{campaign}", func(w http.ResponseWriter, req *http.Request) {
-		DestinationDropdownHandler(w, req, logger, con)
-	}).Methods("GET")
-
-	r.HandleFunc("/api/v1/nodelink/{affiliate}/{campaign}", func(w http.ResponseWriter, req *http.Request) {
-		NodelinkHandler(w, req, logger, con)
-	}).Methods("GET")
-
-	r.HandleFunc("/api/v2/sys/info/isalive", IsAlive).Methods("GET")
 	sh := http.StripPrefix("/api/v2/web/", http.FileServer(http.Dir("./charts/")))
 	r.PathPrefix("/api/v2/web/").Handler(sh)
 	http.Handle("/", r)
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
-			logger.Error("Httpserver: ListenAndServe() error: " + err.Error())
+			con.Error("Httpserver: ListenAndServe() error: " + err.Error())
 		}
 	}()
 
@@ -56,6 +37,8 @@ func startHttpServer(logger *simple.Logger, con connectors.Clients) *http.Server
 }
 
 func main() {
+
+	var logger *simple.Logger
 
 	if os.Getenv("LOG_LEVEL") == "" {
 		logger = &simple.Logger{Level: "info"}
@@ -72,7 +55,7 @@ func main() {
 
 	defer conn.Close()
 
-	srv := startHttpServer(logger, conn)
+	srv := startHttpServer(conn)
 	logger.Info("Starting server on port " + srv.Addr)
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)

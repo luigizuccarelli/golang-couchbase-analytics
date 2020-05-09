@@ -4,8 +4,16 @@ import (
 	gocb "github.com/couchbase/gocb/v2"
 )
 
-// Client Interface - used as a receiver and can be overriden for testing
-type Clients interface {
-	AnalyticsQuery(query string, opts *gocb.AnalyticsOptions) (*gocb.AnalyticsResult, error)
+type AnalyticsResult interface {
+	Next(data interface{}) bool
 	Close() error
+}
+
+type Clients interface {
+	Error(string, ...interface{})
+	Info(string, ...interface{})
+	Debug(string, ...interface{})
+	Trace(string, ...interface{})
+	AnalyticsQuery(query string, opts *gocb.AnalyticsOptions) (AnalyticsResult, error)
+	Close()
 }

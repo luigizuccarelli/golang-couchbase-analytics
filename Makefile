@@ -13,4 +13,5 @@ cover:
 	go tool cover -html=tests/results/cover.out -o tests/results/cover.html
 
 clean:
+	rm -rf build/*
 	go clean ./...

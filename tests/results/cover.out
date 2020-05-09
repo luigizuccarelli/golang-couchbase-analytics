@@ -8,3 +8,16 @@ gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/va
 gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/validator/validate.go:46.2,46.12 1 1
 gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/validator/validate.go:41.23,42.54 1 1
 gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/validator/validate.go:42.54,44.4 1 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:20.90,30.16 6 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:38.2,39.16 2 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:47.2,51.27 5 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:30.16,36.3 5 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:39.16,45.3 5 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:54.54,56.2 1 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:59.57,65.2 4 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:67.88,71.21 3 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:78.2,78.36 1 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:82.2,82.18 1 1
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:71.21,72.36 1 0
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:72.36,76.4 3 0
+gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go:78.36,80.3 1 1

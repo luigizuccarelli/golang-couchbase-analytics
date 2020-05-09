@@ -1,4 +1,4 @@
-package main
+package schema
 
 type SankeyData struct {
 	From  string `json:"from"`
