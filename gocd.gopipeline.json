@@ -2,7 +2,7 @@
   "format_version" : 1,
   "label_template": "${COUNT}",
   "enable_pipeline_locking": false,
-  "name": "simple-microservice",
+  "name": "trackmate-couchbase-analytics",
   "group" : "devops",
   "tracking_tool": null,
   "timer": null,
@@ -10,7 +10,7 @@
   "materials": [
     {
       "type": "git",
-      "url": "https://gitea-ci-cd.apps.balt1.okd.14west.io/lzuccarelli/golang-simple-microservice.git",
+      "url": "https://gitea-ci-cd.apps.balt1.okd.14west.io/lzuccarelli/trackmate-couchbase-analytics.git",
       "destination": null,
       "filter": null,
       "name": "scm",
@@ -19,7 +19,7 @@
       "submodule_folder": null
     }
   ],
-  "stages": [
+    "stages": [
     {
       "name": "checkout_scm",
       "fetch_materials": true,
@@ -33,7 +33,7 @@
           "run_instance_count": null,
           "timeout": 0,
           "environment_variables": [],
-          "resources": null, 
+          "resources": null,
           "tasks": [
             {
               "type": "exec",
@@ -45,6 +45,57 @@
               "command": "echo",
               "arguments": [
                 "checkout latest from master"
+              ],
+              "working_directory": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "test",
+      "fetch_materials": false,
+      "clean_working_directory": false,
+      "never_cleanup_artifacts": false,
+      "approval": null,
+      "environment_variables": [],
+      "jobs": [
+        {
+          "name": "test_exec",
+          "run_instance_count": null,
+          "timeout": 0,
+          "environment_variables": [],
+          "resources": null,
+          "tasks": [
+            {
+              "type": "exec",
+              "command": "echo",
+              "arguments": [
+                "Executing golang clean"
+              ],
+              "working_directory": null
+            },
+            {
+              "type": "exec",
+              "command": "make",
+              "arguments": [
+                "clean"
+              ],
+              "working_directory": null
+            },
+            {
+              "type": "exec",
+              "command": "echo",
+              "arguments": [
+                "Executing golang unit tests"
+              ],
+              "working_directory": null
+            },
+            {
+              "type": "exec",
+              "command": "make",
+              "arguments": [
+                "test"
               ],
               "working_directory": null
             }
@@ -65,23 +116,37 @@
           "run_instance_count": null,
           "timeout": 0,
           "environment_variables": [],
-          "resources": null, 
+          "resources": null,
           "tasks": [
             {
               "type": "exec",
               "command": "echo",
               "arguments": [
-                "Executing golang compile"
+                "Executing golang build (compile)"
               ],
               "working_directory": null
             },
             {
               "type": "exec",
-              "command": "go",
+              "command": "make",
               "arguments": [
-                "build",
-                "-o",
-                "bin/microservice"
+                "build"
+              ],
+              "working_directory": null
+            },
+            {
+              "type": "exec",
+              "command": "echo",
+              "arguments": [
+                "Executing golang cover profile"
+              ],
+              "working_directory": null
+            },
+            {
+              "type": "exec",
+              "command": "make",
+              "arguments": [
+                "cover"
               ],
               "working_directory": null
             }
@@ -90,7 +155,42 @@
       ]
     },
     {
-      "name": "build",
+      "name": "sonarqube",
+      "fetch_materials": false,
+      "clean_working_directory": false,
+      "never_cleanup_artifacts": false,
+      "approval": null,
+      "environment_variables": [],
+      "jobs": [
+        {
+          "name": "sonarqube_exec",
+          "run_instance_count": null,
+          "timeout": 0,
+          "environment_variables": [],
+          "resources": null,
+          "tasks": [
+            {
+              "type": "exec",
+              "command": "echo",
+              "arguments": [
+                "Executing sonarqube scanner"
+              ],
+              "working_directory": null
+            },
+            {
+              "type": "exec",
+              "command": "./gocd-cicd.sh",
+              "arguments": [
+                "sonarqube"
+              ],
+              "working_directory": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "build-deploy",
       "fetch_materials": false,
       "clean_working_directory": false,
       "never_cleanup_artifacts": false,
@@ -102,7 +202,7 @@
           "run_instance_count": null,
           "timeout": 0,
           "environment_variables": [],
-          "resources": null, 
+          "resources": null,
           "tasks": [
             {
               "type": "exec",
@@ -114,7 +214,10 @@
             },
             {
               "type": "exec",
-              "command": "./build-deploy.sh",
+              "command": "./gocd-cicd.sh",
+              "arguments": [
+                "build-image"
+              ],
               "working_directory": null
             }
           ]

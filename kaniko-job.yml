@@ -1,21 +1,21 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: kaniko-simple-microservice
+  name: kaniko-trackmate-couchbase-analytics
 spec:
   parallelism: 1    
   completions: 1    
   template:         
     metadata:
-      name: kaniko-simple-microservice
+      name: kaniko-trackmate-couchbase-analytics
     spec:
       containers:
       - name: kaniko
         image: gcr.io/kaniko-project/executor:latest
         args: [
-          "--dockerfile=/godata/pipelines/simple-microservice/Dockerfile",
-          "--context=/godata/pipelines/simple-microservice",
-          "--destination=lzuccarelli/golang-simple-service:1.12.5"
+          "--dockerfile=/godata/pipelines/trackmate-couchbase-analytics/Dockerfile",
+          "--context=/godata/pipelines/trackmate-couchbase-analytics",
+          "--destination=lzuccarelli/trackmate-couchbase-analytics:1.13.1"
         ]
         volumeMounts:
         - mountPath: /godata
@@ -25,12 +25,12 @@ spec:
           subPath: config.json
         env:
         - name: DESITINATION
-          value: lzuccarelli/golang-simple-service:1.12.5
+          value: lzuccarelli/ltrackmate-couchbase-analytics:1.13.1
       restartPolicy: Never   
       volumes:
       - name: gocdagent-data
         persistentVolumeClaim:
-          claimName: gocdagent
+          claimName:  gocdagent-node-and-go
       - name: docker-creds
         configMap:
           defaultMode: 420
