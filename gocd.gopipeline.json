@@ -3,14 +3,14 @@
   "label_template": "${COUNT}",
   "enable_pipeline_locking": false,
   "name": "trackmate-couchbase-analytics",
-  "group" : "devops",
+  "group" : "Trackmate",
   "tracking_tool": null,
   "timer": null,
   "environment_variables": [],
   "materials": [
     {
       "type": "git",
-      "url": "https://gitea-ci-cd.apps.balt1.okd.14west.io/lzuccarelli/trackmate-couchbase-analytics.git",
+      "url": "http://cicd:cicd01@gitea.cicd.svc.cluster.local:3000/cicd/trackmate-couchbase-analytics.git",
       "destination": null,
       "filter": null,
       "name": "scm",
