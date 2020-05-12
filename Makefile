@@ -15,3 +15,9 @@ cover:
 clean:
 	rm -rf build/*
 	go clean ./...
+
+container:
+	podman build -t nexus-registry-nexus.apps.aws2-dev.ocp.14west.io/trackmate-couchbase-analytics:1.14.2 .
+
+push:
+	podman push nexus-registry-nexus.apps.aws2-dev.ocp.14west.io/trackmate-couchbase-analytics:1.14.2 

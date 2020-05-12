@@ -2,12 +2,13 @@ FROM registry.access.redhat.com/ubi8/ubi-init:latest
 
 LABEL maintainer="lzuccarelli@tfd.ie"
 
+RUN dnf remove -y subscription-manager
 # gcc for cgo
 RUN dnf install -y git gcc make && rm -rf /var/lib/apt/lists/*
 
-ENV GOLANG_VERSION 1.13.1
+ENV GOLANG_VERSION 1.14.2
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
-ENV GOLANG_DOWNLOAD_SHA256 94f874037b82ea5353f4061e543681a0e79657f787437974214629af8407d124
+ENV GOLANG_DOWNLOAD_SHA256 6272d6e940ecb71ea5636ddb5fab3933e087c1356173c61f4a803895e947ebb3
 
 RUN curl -fsSL "$GOLANG_DOWNLOAD_URL" -o golang.tar.gz \
 	&& echo "$GOLANG_DOWNLOAD_SHA256  golang.tar.gz" | sha256sum -c - \
