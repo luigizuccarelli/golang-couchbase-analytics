@@ -36,12 +36,12 @@ func (c *Connectors) Trace(msg string, val ...interface{}) {
 }
 
 // Upsert : wrapper function for couchbase update
-func NewResult(res *gocb.AnalyticsResult) AnalyticsResult {
-	return Result{Data: res}
+func (r Result) Row(ptr interface{}) error {
+	return r.Data.Row(ptr)
 }
 
-func (r Result) Next(data interface{}) bool {
-	return r.Data.Next(data)
+func (r Result) Next() bool {
+	return r.Data.Next()
 }
 
 func (r Result) Close() error {
@@ -50,8 +50,8 @@ func (r Result) Close() error {
 
 func (conn Connectors) AnalyticsQuery(query string, opts *gocb.AnalyticsOptions) (AnalyticsResult, error) {
 	res, err := conn.Cluster.AnalyticsQuery(query, opts)
-	ar := NewResult(res)
-	return ar, err
+	//ar := NewResult(res)
+	return res, err
 }
 
 func (conn Connectors) Close() {
@@ -74,7 +74,7 @@ func NewClientConnections(logger *simple.Logger) Clients {
 	}
 
 	// get a bucket reference
-	bucket := cluster.Bucket(os.Getenv("COUCHBASE_BUCKET"), &gocb.BucketOptions{})
+	bucket := cluster.Bucket(os.Getenv("COUCHBASE_BUCKET"))
 
 	conns := &Connectors{Bucket: bucket, Cluster: cluster, Logger: logger}
 	return conns

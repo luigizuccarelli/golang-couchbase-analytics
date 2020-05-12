@@ -1,8 +1,8 @@
 .PHONY: all test build clean
 
-all: test build
+all: clean test build
 
-build: test
+build: 
 	mkdir -p build
 	go build -o build ./...
 

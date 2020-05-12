@@ -16,6 +16,10 @@ import (
 	"github.com/microlib/simple"
 )
 
+var (
+	count int = 0
+)
+
 type FakeCouchbase struct {
 }
 
@@ -59,7 +63,17 @@ func (c *Connectors) Trace(msg string, val ...interface{}) {
 	c.Logger.Trace(fmt.Sprintf(msg, val...))
 }
 
-func (fs FakeResult) Next(data interface{}) bool {
+func (fs FakeResult) Next() bool {
+	count++
+	if count < 2 {
+		return true
+	}
+	return false
+}
+
+func (fs FakeResult) Row(data interface{}) error {
+	fmt.Println(fmt.Sprintf("DEBUG LMZ %v", fs))
+
 	m := make(map[string]interface{})
 	if fs.Type == "Sankey" {
 		m["count"] = "10"
@@ -67,15 +81,7 @@ func (fs FakeResult) Next(data interface{}) bool {
 		m["destination"] = "XY"
 		*data.(*map[string]interface{}) = m
 	}
-
-	if fs.Type == "Funnel" {
-		m["count"] = "10"
-		m["pagename"] = "Test"
-		m["pagetype"] = "Landing"
-		m["utm_source"] = "mail"
-		*data.(*map[string]interface{}) = m
-	}
-	return false
+	return nil
 }
 
 func (fs FakeResult) Close() error {
@@ -175,6 +181,7 @@ func TestAllMiddleware(t *testing.T) {
 
 	t.Run("SankeyChartHandler : should pass", func(t *testing.T) {
 		var STATUS int = 200
+		count = 0
 		// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
 		rr := httptest.NewRecorder()
 		data, _ := ioutil.ReadFile("../../tests/payload.json")
@@ -197,9 +204,9 @@ func TestAllMiddleware(t *testing.T) {
 			t.Errorf(fmt.Sprintf("Handler %s returned with incorrect status code - got (%d) wanted (%d)", "SankeyChartHandler", rr.Code, STATUS))
 		}
 	})
-
 	t.Run("SankeyChartHandler : should fail", func(t *testing.T) {
 		var STATUS int = 500
+		count = 0
 		// We create a ResponseRecorder (which satisfies http.ResponseWriter) to record the response.
 		rr := httptest.NewRecorder()
 		data, _ := ioutil.ReadFile("../../tests/payload.json")

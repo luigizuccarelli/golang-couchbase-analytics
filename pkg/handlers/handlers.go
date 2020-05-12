@@ -68,7 +68,8 @@ func processSankeyResults(res connectors.AnalyticsResult) ([]schema.SankeyData, 
 	var row map[string]interface{}
 	var data []schema.SankeyData
 
-	for res.Next(&row) {
+	for res.Next() {
+		res.Row(&row)
 		if count, ok := row["count"]; ok {
 			x, _ := strconv.Atoi(fmt.Sprintf("%v", count))
 			d := schema.SankeyData{Value: x, From: fmt.Sprintf("%v", row["source"]), To: fmt.Sprintf("%v", row["destination"])}

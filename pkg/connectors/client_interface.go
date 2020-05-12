@@ -5,7 +5,8 @@ import (
 )
 
 type AnalyticsResult interface {
-	Next(data interface{}) bool
+	Next() bool
+	Row(ptr interface{}) error
 	Close() error
 }
 

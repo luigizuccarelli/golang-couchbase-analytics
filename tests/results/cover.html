@@ -54,7 +54,7 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go (89.5%)</option>
+				<option value="file0">gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers/handlers.go (100.0%)</option>
 				
 				<option value="file1">gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/validator/validate.go (100.0%)</option>
 				
@@ -140,8 +140,9 @@ func processSankeyResults(res connectors.AnalyticsResult) ([]schema.SankeyData, 
         var row map[string]interface{}
         var data []schema.SankeyData
 
-        for res.Next(&amp;row) </span><span class="cov0" title="0">{
-                if count, ok := row["count"]; ok </span><span class="cov0" title="0">{
+        for res.Next() </span><span class="cov8" title="1">{
+                res.Row(&amp;row)
+                if count, ok := row["count"]; ok </span><span class="cov8" title="1">{
                         x, _ := strconv.Atoi(fmt.Sprintf("%v", count))
                         d := schema.SankeyData{Value: x, From: fmt.Sprintf("%v", row["source"]), To: fmt.Sprintf("%v", row["destination"])}
                         data = append(data, d)
