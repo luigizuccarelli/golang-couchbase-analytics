@@ -23,8 +23,6 @@ func startHttpServer(con connectors.Clients) *http.Server {
 
 	r.HandleFunc("/api/v2/sys/info/isalive", handlers.IsAlive).Methods("GET")
 
-	sh := http.StripPrefix("/api/v2/web/", http.FileServer(http.Dir("./charts/")))
-	r.PathPrefix("/api/v2/web/").Handler(sh)
 	http.Handle("/", r)
 
 	go func() {
