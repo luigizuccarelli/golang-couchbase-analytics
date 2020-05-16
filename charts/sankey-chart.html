@@ -14,14 +14,14 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
    
-    var baseIp = "trackmate-couchbase-analytics";
+    var baseIp = "couchbase-analytics";
     google.charts.load('current', {'packages':['sankey']});
 
     function getGraphData() {
       console.log("Getting graph data");
 
       var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", "http://"+ baseIp + ":9001/api/v1/sankeydata" , true);
+      xhttp.open("POST", "http://"+ baseIp + ":9000/api/v1/sankeydata" , true);
       xhttp.send();
       let arr = [];
 

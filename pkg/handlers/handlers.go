@@ -9,7 +9,7 @@ import (
 
 	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/connectors"
 	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/schema"
-	"github.com/gorilla/mux"
+	//"github.com/gorilla/mux"
 )
 
 const (
@@ -19,14 +19,22 @@ const (
 
 func SankeyChartHandler(w http.ResponseWriter, r *http.Request, conn connectors.Clients) {
 	var response schema.Response
-	vars := mux.Vars(r)
+	//vars := mux.Vars(r)
 
 	addHeaders(w, r)
 
-	q := "select `from`.`pagename` as source,`to`.`pagename` as destination, count(`trackingid`) as count  from " +
-		vars["affiliate"] + " where `event`.`type` = 'load'  group by `from`.`pagename` as source, `to`.`pagename` as destination"
+	query := `SELECT page.referrer AS source,
+									 page.url AS destination,
+									 COUNT(journey_id) AS count,
+									 PAGEEVENTS.timestamp as ts
+						FROM PAGEEVENTS
+						WHERE  spec = 'page'
+						GROUP BY PAGEEVENTS.timestamp AS ts,
+									 page.referrer AS source,
+									 page.url AS destination
+						ORDER BY PAGEEVENTS.timestamp`
 
-	ar, err := conn.AnalyticsQuery(q, nil)
+	ar, err := conn.AnalyticsQuery(query, nil)
 	if err != nil {
 		response = schema.Response{Name: os.Getenv("NAME"), StatusCode: "500", Status: "ERROR", Message: fmt.Sprintf("Could not execute analytics query from couchbase %v", err)}
 		w.WriteHeader(http.StatusInternalServerError)

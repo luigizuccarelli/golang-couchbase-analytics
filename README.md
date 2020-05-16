@@ -41,3 +41,21 @@ SELECT DISTINCT `trackingid`  from analytics where `utm_source` = 'google' and `
 
 ### Count per node
 SELECT `to`.`pagename` , `to`.`pagetype`, count(*) from SBR where `event`.`type` = 'load' and utm_campaign = 'WinBig' and utm_source = 'mail' and `to`.`pagename` in ['page-one', 'page-six', 'page-seven'] group by `to`.`pagename` , `to`.`pagetype`
+
+### Sankey in time order
+SELECT `page`.`referrer` AS source,
+       `page`.`url` AS destination,
+       COUNT(`journey_id`) AS count,
+       `TEST`.`timestamp` as ts
+FROM TEST
+WHERE `spec` = 'page'
+GROUP BY `TEST`.`timestamp` AS ts,
+         `page`.`referrer` AS source,
+         `page`.`url` AS destination
+ORDER BY `TEST`.`timestamp`
+
+### Sankey old
+"select `from`.`pagename` as source,`to`.`pagename` as destination, count(`trackingid`) as count  from " +
+vars["affiliate"] + " where `event`.`type` = 'load'  group by `from`.`pagename` as source, `to`.`pagename` as destination"
+
+
