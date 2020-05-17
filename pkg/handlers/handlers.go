@@ -24,13 +24,12 @@ func SankeyChartHandler(w http.ResponseWriter, r *http.Request, conn connectors.
 	addHeaders(w, r)
 
 	// remove leading htpps:// and trailing journey_id for uniquness
-	query := `SELECT substr(page.referrer,8,(length(page.referrer)-48)) AS source,
-									 substr(page.url,8,(length(page.url)-48)) AS destination,
-									 count(message_id) AS count
+	query := `SELECT	page.referrerName AS source,
+										page.urlName AS destination,
+										COUNT(message_id) AS count
 						FROM PAGEEVENTS
-						WHERE spec = 'page'
-						GROUP BY substr(page.referrer,8,(length(page.referrer)-48)) as source,
-									   substr(page.url,8,(length(page.url)-48)) AS destination`
+						GROUP BY	page.referrerName as source,
+											page.urlName AS destination`
 
 	ar, err := conn.AnalyticsQuery(query, nil)
 	if err != nil {
