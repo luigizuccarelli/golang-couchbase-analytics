@@ -11,9 +11,9 @@ import (
 	//"reflect"
 	"testing"
 
-	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/connectors"
 	gocb "github.com/couchbase/gocb/v2"
 	"github.com/microlib/simple"
+	"lmzsoftware.com/lzuccarelli/golang-couchbase-analytics/pkg/connectors"
 )
 
 var (
