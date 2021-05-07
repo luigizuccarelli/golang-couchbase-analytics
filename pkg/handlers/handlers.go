@@ -7,8 +7,8 @@ import (
 	"os"
 	"strconv"
 
-	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/connectors"
-	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/schema"
+	"lmzsoftware.com/lzuccarelli/golang-couchbase-analytics/pkg/connectors"
+	"lmzsoftware.com/lzuccarelli/golang-couchbase-analytics/pkg/schema"
 	//"github.com/gorilla/mux"
 )
 

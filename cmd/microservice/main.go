@@ -6,11 +6,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/connectors"
-	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/handlers"
-	"gitea-cicd.apps.aws2-dev.ocp.14west.io/cicd/trackmate-couchbase-analytics/pkg/validator"
 	"github.com/gorilla/mux"
 	"github.com/microlib/simple"
+	"lmzsoftware.com/lzuccarelli/golang-couchbase-analytics/pkg/connectors"
+	"lmzsoftware.com/lzuccarelli/golang-couchbase-analytics/pkg/handlers"
+	"lmzsoftware.com/lzuccarelli/golang-couchbase-analytics/pkg/validator"
 )
 
 func startHttpServer(con connectors.Clients) *http.Server {

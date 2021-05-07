@@ -17,7 +17,7 @@ clean:
 	go clean ./...
 
 container:
-	podman build -t nexus-registry-nexus.apps.aws2-dev.ocp.14west.io/trackmate-couchbase-analytics:1.14.2 .
+	podman build -t quay.io/luigizuccarelli/golang-couchbase-analytics:1.16.3 .
 
 push:
-	podman push nexus-registry-nexus.apps.aws2-dev.ocp.14west.io/trackmate-couchbase-analytics:1.14.2 
+	podman push --authfile=/home/lzuccarelli/config.json quay.io/luigizuccarelli/golang-couchbase-analytics:1.16.3 
